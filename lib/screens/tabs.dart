@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:meals/data/dummy_data.dart';
 import 'package:meals/models/meal.dart';
 import 'package:meals/screens/categories.dart';
+import 'package:meals/screens/filters.dart';
 import 'package:meals/screens/meals.dart';
 import 'package:meals/widgets/main_drawer.dart';
+
+const kInitialFilters={
+  Filter.glutenFree:false,
+  Filter.lactoseFree:false,
+  Filter.vegan:false,
+  Filter.vegetarian:false,
+ };
+
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -16,8 +26,8 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
  
  int selectedPageIndex = 0;
-
  final List<Meal> favouriteMeals=[];
+ Map<Filter, bool> _selectedFilters=kInitialFilters;
 
  void _showInfoMessage(String message){
   ScaffoldMessenger.of(context).clearSnackBars();
@@ -43,12 +53,13 @@ _showInfoMessage("Meal added to favourites");
   }
  }
 
- void _setScreen(String identifier){
+ void _setScreen(String identifier) async {
+  Navigator.of(context).pop();
   if(identifier=='filters'){
-
-  }
-  else{
-    Navigator.of(context).pop();
+    final result = await Navigator.of(context).push<Map<Filter, bool>>(MaterialPageRoute(builder: (ctx) => FiltersScreen(currentFilters: _selectedFilters,)));
+  setState(() {
+  _selectedFilters=result ?? kInitialFilters;
+});
   }
  }
 
@@ -60,8 +71,24 @@ _showInfoMessage("Meal added to favourites");
  
   @override
   Widget build(BuildContext context) {
+
+    final availableMeals=dummyMeals.where((meal) {
+      if(_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree){
+        return false;
+      }
+      if(_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree){
+        return false;
+      }
+      if(_selectedFilters[Filter.vegan]! && !meal.isVegan){
+        return false;
+      }
+      if(_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian){
+        return false;
+      }
+      return true;
+    }).toList();
     
-    Widget activePage=CategoriesScreen(onToggleFavourite: toggleMealFavouriteStatus,);
+    Widget activePage=CategoriesScreen(onToggleFavourite: toggleMealFavouriteStatus, availableMeals: availableMeals,);
     var activePageTitle="Categories";
 
     if(selectedPageIndex == 1){
