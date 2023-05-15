@@ -18,7 +18,11 @@ class MealDetailsScreen extends ConsumerWidget {
         title: Text(meal.title),
         actions: [
           IconButton(onPressed: () {
-            ref.read(favouriteMealsProvider.notifier).toggleMealFavouriteStatus(meal);
+            final wasAdded = ref.read(favouriteMealsProvider.notifier).toggleMealFavouriteStatus(meal);
+             ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(wasAdded ? "Meal Added as a favourite" : "Meal removed from the favourites"))
+  );
             }, icon: Icon(Icons.star))
         ],
       ),
