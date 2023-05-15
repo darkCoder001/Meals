@@ -9,14 +9,8 @@ import 'package:meals/widgets/main_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals/providers/meals_provider.dart';
 import 'package:meals/providers/favourites_provider.dart';
-
-
-const kInitialFilters={
-  Filter.glutenFree:false,
-  Filter.lactoseFree:false,
-  Filter.vegan:false,
-  Filter.vegetarian:false,
- };
+import 'package:meals/providers/filters_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
 class TabsScreen extends ConsumerStatefulWidget {
