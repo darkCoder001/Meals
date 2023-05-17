@@ -13,6 +13,9 @@ class MealDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+   final favouriteMeals = ref.watch(favouriteMealsProvider);
+  final isFav = favouriteMeals.contains(meal);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
@@ -23,7 +26,7 @@ class MealDetailsScreen extends ConsumerWidget {
             ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(wasAdded ? "Meal Added as a favourite" : "Meal removed from the favourites"))
   );
-            }, icon: Icon(Icons.star))
+            }, icon: Icon(isFav ? Icons.star : Icons.star_border))
         ],
       ),
       body: 
